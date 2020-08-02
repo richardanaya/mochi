@@ -1,0 +1,22 @@
+[package]
+name = "mochi"
+version = "0.0.0"
+authors = ["Richard Anaya"]
+edition = "2018"
+description = "A mobile game engine based on Gtk & Cairo"
+license = "MIT OR Apache-2.0"
+categories = ["game", "gtk"]
+repository = "https://github.com/richardanaya/mochi"
+readme="README.md"
+
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+gtk = { version = "0.9", features = ["v3_22"] }
+cairo-rs = "0.9.1"
+rand = "0"
+glib = "0.10"
+gio = "0.9"
+gdk = "0.13"
+gdk-pixbuf = "0.9.0"

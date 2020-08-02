@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/pong">
+    <file>ball.png</file>
+    <file>paddle.png</file>
+  </gresource>
+</gresources>
