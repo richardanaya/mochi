@@ -18,7 +18,7 @@ pub struct Input {
     pub is_down: bool,
 }
 
-pub fn init(resource_bytes:&'static [u8]) {
+pub fn init(resource_bytes: &'static [u8]) {
     // we embed our image,glade file, and css  in a glib gresource file generated
     //  from app.xml, let's load it in from bytes embedded in our app
     let bytes = glib::Bytes::from_static(resource_bytes);
@@ -41,36 +41,23 @@ pub fn random_sign() -> f64 {
 }
 
 pub fn image_from_resource(path: &str) -> ImageSurface {
-    let pb = Pixbuf::from_resource(path).unwrap();
-    let pixels = unsafe { pb.get_pixels().to_owned() };
-    let has_alpha = pb.get_has_alpha();
-    let mut img = ImageSurface::create(Format::ARgb32, pb.get_width(), pb.get_height()).unwrap();
-    {
-        let mut d: ImageSurfaceData = img.get_data().unwrap();
-        let data = &mut d;
-        let w = pb.get_width();
-        for x in 0..w {
-            for y in 0..pb.get_height() {
-                if has_alpha {
-                    let sp = ((y * w + x) * 4) as usize;
-                    let p = ((y * w + x) * 4) as usize;
-                    data[p] = pixels[sp + 2];
-                    data[p + 1] = pixels[sp + 1];
-                    data[p + 2] = pixels[sp];
-                    data[p + 3] = pixels[sp + 3];
-                } else {
-                    // TODO, there's a bug with pngs without transparency... not sure where..
-                    let sp = ((y * w + x) * 3) as usize;
-                    let p = ((y * w + x) * 4) as usize;
-                    data[p] = pixels[sp + 2];
-                    data[p + 1] = pixels[sp + 1];
-                    data[p + 2] = pixels[sp];
-                    data[p + 3] = 255;
-                }
-            }
+    init("game.gresource");
+
+    let img_mochi = image_from_resource("/game/mochi.png");
+    let img_mochi_eaten = image_from_resource("/game/mochi_eaten.png");
+
+    run_game(move |window, ctx, pointer, delta_time| {
+        if pointer.is_down() {
+            draw_image_centered(
+                ctx,
+                window.width / 2.0,
+                window.height / 2.0,
+                img_mochi_eaten,
+            );
+        } else {
+            draw_image_centered(ctx, window.width / 2.0, window.height / 2.0, img_mochi);
         }
-    }
-    img
+    });
 }
 
 pub fn clear(ctx: &Context, r: f64, g: f64, b: f64) {
@@ -98,19 +85,17 @@ where
         return;
     }
 
- 
     // grab the controls we'll be using
     let window: gtk::Window = gtk::Window::new(gtk::WindowType::Toplevel);
     window.set_decorated(false);
     let event_box: gtk::EventBox = gtk::EventBox::new();
-    event_box.set_events(gdk::EventMask::STRUCTURE_MASK|gdk::EventMask::TOUCH_MASK);
+    event_box.set_events(gdk::EventMask::STRUCTURE_MASK | gdk::EventMask::TOUCH_MASK);
     window.add(&event_box);
     let drawing_area = gtk::DrawingArea::new();
     event_box.add(&drawing_area);
-    let canvas: Rc<RefCell<gtk::DrawingArea>> =
-        Rc::new(RefCell::new(drawing_area));
+    let canvas: Rc<RefCell<gtk::DrawingArea>> = Rc::new(RefCell::new(drawing_area));
 
-    window.connect_window_state_event(|w,e|{
+    window.connect_window_state_event(|w, e| {
         if e.get_new_window_state().contains(gdk::WindowState::FOCUSED) {
             w.fullscreen();
         }
