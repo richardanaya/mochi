@@ -4,6 +4,8 @@ A mobile game engine using Gtk and Cairo written in Rust!
 
 <a href="https://docs.rs/mochi"><img src="https://img.shields.io/badge/docs-latest-blue.svg?style=flat-square" alt="docs.rs docs" /></a>
 
+![pong](screenshots/pong.jpg)
+
 ```
 [dependencies]
 mochi = "0.0"
