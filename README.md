@@ -4,12 +4,12 @@ A game engine oriented toward low power mobile linux phones/tablets.  It's writt
 
 <a href="https://docs.rs/mochi"><img src="https://img.shields.io/badge/docs-latest-blue.svg?style=flat-square" alt="docs.rs docs" /></a>
 
-# Features
+## Features
 
 - [x] atlases
 - [ ] animated sprites
 
-# Example
+## Example
 
 ![pong](screenshots/pong.jpg)
 
@@ -33,7 +33,7 @@ run_game(move |window, ctx, pointer, delta_time| {
 });
 ```
 
-# How to build a game
+## How to build a game
 
 Mochi works off resources put into a Glib resource file. This is pretty simple to do.  Just make an xml file that references your images:
 
@@ -65,7 +65,7 @@ Now your game has everything it needs in it's binary! The images can be acquired
 let img_ball = image_from_resource("/pong/ball.png");
 ```
 
-# License
+## License
 
 This project is licensed under either of
 
