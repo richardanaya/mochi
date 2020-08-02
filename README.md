@@ -12,7 +12,7 @@ mochi = "0.0"
 ```
 
 ```rust
-init("game.gresource");
+init(include_bytes!("game.gresource"));
 
 let img_mochi = image_from_resource("/game/mochi.png");
 let img_mochi_eaten = image_from_resource("/game/mochi_eaten.png");
@@ -29,6 +29,34 @@ run_game(move |window, ctx, pointer, delta_time| {
     }
 });
 ```
+
+# How to build a game
+
+Mochi works off resources put into a Glib resource file. This is pretty simple to do.  Just make an xml file that references your images:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/pong">
+    <file>ball.png</file>
+    <file>paddle.png</file>
+  </gresource>
+</gresources>
+```
+
+Build into a `gresource` file that Glib can understand:
+
+```
+glib-compile-resources game.xml
+``
+
+Inline the bytes of the `game.gresource` into your code during init:
+
+```
+init(include_bytes!("game.gresource"));
+```
+
+Now your game has everything it needs in it's binary!
 
 # License
 
