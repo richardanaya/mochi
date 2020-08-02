@@ -56,7 +56,11 @@ Inline the bytes of the `game.gresource` into your code during init:
 init(include_bytes!("game.gresource"));
 ```
 
-Now your game has everything it needs in it's binary!
+Now your game has everything it needs in it's binary! The images can be acquired as needed using the resource paths you setup.
+
+``
+let img_ball = image_from_resource("/pong/ball.png");
+```
 
 # License
 
