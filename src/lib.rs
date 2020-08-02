@@ -76,6 +76,17 @@ pub fn image_from_resource(path: &str) -> ImageSurface {
 pub trait MochiCairoExt {
     fn clear(&self, r: f64, g: f64, b: f64);
     fn draw_image_centered(&self, x: f64, y: f64, img: &ImageSurface);
+    fn draw_subimage_centered(
+        &self,
+        x: f64,
+        y: f64,
+        img: &ImageSurface,
+        sx: f64,
+        sy: f64,
+        sw: f64,
+        sh: f64,
+    );
+    fn draw_atlas_frame_centered(&self, x: f64, y: f64, img: &Atlas, frame: usize);
 }
 
 impl MochiCairoExt for cairo::Context {
@@ -93,6 +104,38 @@ impl MochiCairoExt for cairo::Context {
         self.set_source_surface(img, 0.0, 0.0);
         self.paint();
         self.restore();
+    }
+
+    fn draw_subimage_centered(
+        &self,
+        x: f64,
+        y: f64,
+        img: &ImageSurface,
+        sx: f64,
+        sy: f64,
+        sw: f64,
+        sh: f64,
+    ) {
+        self.save();
+        self.rectangle(x - sw / 2.0, y - sh / 2.0 as f64, sw as f64, sh as f64);
+        self.clip();
+        self.translate(x - (sw / 2.0) as f64 - sx, y - (sh / 2.0) as f64 - sy);
+        self.set_source_surface(img, 0.0, 0.0);
+        self.paint();
+        self.restore();
+    }
+
+    fn draw_atlas_frame_centered(&self, x: f64, y: f64, atlas: &Atlas, frame: usize) {
+        let frame = &atlas.frames[frame];
+        self.draw_subimage_centered(
+            x,
+            y,
+            &atlas.img.borrow(),
+            frame.x,
+            frame.y,
+            frame.w,
+            frame.h,
+        );
     }
 }
 
@@ -204,4 +247,48 @@ where
     });
 
     gtk::main();
+}
+
+pub struct AtlasFrame {
+    pub x: f64,
+    pub y: f64,
+    pub w: f64,
+    pub h: f64,
+}
+
+pub struct Atlas {
+    pub img: Rc<RefCell<ImageSurface>>,
+    pub frames: Vec<AtlasFrame>,
+}
+
+impl Atlas {
+    pub fn new(
+        img: Rc<RefCell<ImageSurface>>,
+        frame_width: u32,
+        frame_height: u32,
+        num_frames: u32,
+    ) -> Atlas {
+        let mut frames = vec![];
+        {
+            let i = img.borrow();
+            let fw = i.get_width() as u32 / frame_width;
+            let fh = i.get_height() as u32 / frame_height;
+            let mut i = 0;
+            for y in 0..frame_height {
+                for x in 0..frame_width {
+                    if i >= num_frames {
+                        break;
+                    }
+                    frames.push(AtlasFrame {
+                        x: (x * fw) as f64,
+                        y: (y * fh) as f64,
+                        w: fw as f64,
+                        h: fh as f64,
+                    });
+                    i = i + 1;
+                }
+            }
+        }
+        Atlas { img, frames }
+    }
 }
