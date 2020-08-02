@@ -9,6 +9,9 @@ A game engine oriented toward low power mobile linux phones/tablets.  It's writt
 - [x] atlases
 - [ ] animated sprites
 
+## Limitations
+- Only support for for 8bpc RGBA png images
+
 ## Example
 
 ![pong](screenshots/pong.jpg)
