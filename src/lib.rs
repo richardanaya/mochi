@@ -58,6 +58,12 @@ pub fn image_from_resource(path: &str) -> ImageSurface {
                     data[p + 1] = pixels[sp + 1];
                     data[p + 2] = pixels[sp];
                     data[p + 3] = pixels[sp + 3];
+                    // not sure why but alpha needs to be black
+                    if pixels[sp + 3] == 0 {
+                        data[p] = 0;
+                        data[p + 1] = 0;
+                        data[p + 2] = 0;
+                    }
                 } else {
                     // TODO, there's a bug with pngs without transparency... not sure where..
                     let sp = ((y * w + x) * 3) as usize;
@@ -284,7 +290,7 @@ impl Atlas {
                         w: fw as f64,
                         h: fh as f64,
                     });
-                    i = i + 1;
+                    i += 1;
                 }
             }
         }
