@@ -5,7 +5,7 @@ authors = ["Richard Anaya"]
 edition = "2018"
 description = "A mobile game engine based on Gtk & Cairo"
 license = "MIT OR Apache-2.0"
-categories = ["game", "gtk"]
+categories = ["game-engines", "gui"]
 repository = "https://github.com/richardanaya/mochi"
 readme="README.md"
 
