@@ -72,14 +72,14 @@ fn main() {
             g.ball_vel_y = 200.0 * random_sign();
         }
 
-        clear(ctx, 1.0, 1.0, 1.0);
+        ctx.clear(1.0, 1.0, 1.0);
 
         if pointer.is_down {
             g.player_paddle_x = pointer.x;
         }
 
-        draw_image_centered(ctx, g.ball_x, g.ball_y, &img_ball);
-        draw_image_centered(ctx, g.opponent_paddle_x, g.opponent_paddle_y, &img_paddle);
-        draw_image_centered(ctx, g.player_paddle_x, g.player_paddle_y, &img_paddle);
+        ctx.draw_image_centered(g.ball_x, g.ball_y, &img_ball);
+        ctx.draw_image_centered(g.opponent_paddle_x, g.opponent_paddle_y, &img_paddle);
+        ctx.draw_image_centered(g.player_paddle_x, g.player_paddle_y, &img_paddle);
     });
 }

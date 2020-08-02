@@ -17,14 +17,13 @@ let img_mochi_eaten = image_from_resource("/game/mochi_eaten.png");
 
 run_game(move |window, ctx, pointer, delta_time| {
     if pointer.is_down() {
-        draw_image_centered(
-            ctx,
+        ctx.draw_image_centered(
             window.width / 2.0,
             window.height / 2.0,
             img_mochi_eaten,
         );
     } else {
-        draw_image_centered(ctx, window.width / 2.0, window.height / 2.0, img_mochi);
+        ctx.draw_image_centered(window.width / 2.0, window.height / 2.0, img_mochi);
     }
 });
 ```
