@@ -48,7 +48,7 @@ Build into a `gresource` file that Glib can understand:
 
 ```
 glib-compile-resources game.xml
-``
+```
 
 Inline the bytes of the `game.gresource` into your code during init:
 
