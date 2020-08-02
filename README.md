@@ -5,7 +5,7 @@ A game engine oriented toward low power mobile linux phones/tablets.  It's writt
 <a href="https://docs.rs/mochi"><img src="https://img.shields.io/badge/docs-latest-blue.svg?style=flat-square" alt="docs.rs docs" /></a>
 
 ## Features
-
+- [x] touch
 - [x] atlases
 - [ ] animated sprites
 
