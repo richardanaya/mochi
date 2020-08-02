@@ -46,19 +46,19 @@ Mochi works off resources put into a Glib resource file. This is pretty simple t
 
 Build into a `gresource` file that Glib can understand:
 
-```
+```rust
 glib-compile-resources game.xml
 ```
 
 Inline the bytes of the `game.gresource` into your code during init:
 
-```
+```rust
 init(include_bytes!("game.gresource"));
 ```
 
 Now your game has everything it needs in it's binary! The images can be acquired as needed using the resource paths you setup.
 
-``
+```rust
 let img_ball = image_from_resource("/pong/ball.png");
 ```
 
