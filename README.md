@@ -1,6 +1,6 @@
 # Mochi :dango: 
 
-A game engine oriented toward low power mobile linux phones/tablets.  It's written in Rust and uses Gtk and Cairo! All drawing is done with an [Cairo Context](https://gtk-rs.org/docs/cairo/struct.Context.html) that this library has extended to do some really [common graphics operations](https://docs.rs/mochi/trait.MochiCairoExt.html).
+A game engine oriented toward low power mobile linux phones/tablets.  It's written in Rust and uses Gtk and Cairo! All drawing is done with an [Cairo Context](https://gtk-rs.org/docs/cairo/struct.Context.html) that this library has extended to do some really [common graphics operations](https://docs.rs/mochi/latest/mochi/trait.MochiCairoExt.html).
 
 <a href="https://docs.rs/mochi"><img src="https://img.shields.io/badge/docs-latest-blue.svg?style=flat-square" alt="docs.rs docs" /></a>
 
