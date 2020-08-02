@@ -144,8 +144,7 @@ where
     T: 'static + Fn(GameWindow, &Context, &Input, f64),
 {
     if gtk::init().is_err() {
-        println!("Failed to initialize GTK.");
-        return;
+        panic!("Failed to initialize GTK.");
     }
 
     // grab the controls we'll be using
