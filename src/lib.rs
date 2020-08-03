@@ -154,20 +154,28 @@ where
     }
 
     // grab the controls we'll be using
-    let window: gtk::Window = gtk::Window::new(gtk::WindowType::Toplevel);
-    window.set_decorated(false);
-    let event_box: gtk::EventBox = gtk::EventBox::new();
+    let window = Rc::new(RefCell::new(gtk::Window::new(gtk::WindowType::Toplevel)));
+    window.borrow().set_decorated(false);
+    let event_box = gtk::EventBox::new();
     event_box.set_events(gdk::EventMask::STRUCTURE_MASK | gdk::EventMask::TOUCH_MASK);
-    window.add(&event_box);
+    window.borrow().add(&event_box);
     let drawing_area = gtk::DrawingArea::new();
     event_box.add(&drawing_area);
     let canvas: Rc<RefCell<gtk::DrawingArea>> = Rc::new(RefCell::new(drawing_area));
 
-    window.connect_window_state_event(|w, e| {
+    window.borrow().connect_window_state_event(|w, e| {
         if e.get_new_window_state().contains(gdk::WindowState::FOCUSED) {
             w.fullscreen();
         }
         Inhibit(false)
+    });
+
+
+    let display = gdk::DisplayManager::get().get_default_display().unwrap();
+    let mon = display.get_monitor(0).unwrap();
+    let win2 = window.clone();
+    mon.connect_property_geometry_notify(move |_|{
+        win2.borrow().fullscreen();
     });
 
     let input = Rc::new(RefCell::new(Input {
@@ -232,9 +240,9 @@ where
     });
 
     // show the window
-    window.show_all();
+    window.borrow().show_all();
 
-    window.fullscreen();
+    window.borrow().fullscreen();
 
     let canvas2 = canvas;
     let tick = move || {
@@ -246,7 +254,7 @@ where
     gtk::timeout_add(1000 / FPS, tick);
 
     // exit properly if our window is closing
-    window.connect_delete_event(|_, _| {
+    window.borrow().connect_delete_event(|_, _| {
         gtk::main_quit();
         Inhibit(false)
     });
