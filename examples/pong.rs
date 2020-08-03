@@ -46,6 +46,7 @@ fn main() {
         g.ball_x += g.ball_vel_x * delta_time;
         g.ball_y += g.ball_vel_y * delta_time;
         g.opponent_paddle_x = g.ball_x;
+        g.player_paddle_y = window.height-50.0;
 
         if g.ball_y < 50.0 + (img_paddle.get_height() / 2 + img_ball.get_height() / 2) as f64
             || ((g.ball_y
