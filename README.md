@@ -8,6 +8,7 @@ This project is super alpha but *usable*. If you want to join in, feel free to o
 
 ## Features
 - [x] touch
+- [x] screen rotation
 - [x] atlases
 - [ ] animated sprites
 

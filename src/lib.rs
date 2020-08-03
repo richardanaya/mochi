@@ -175,6 +175,8 @@ where
     let mon = display.get_monitor(0).unwrap();
     let win2 = window.clone();
     mon.connect_property_geometry_notify(move |_|{
+        win2.borrow().unfullscreen();
+        win2.borrow().maximize();
         win2.borrow().fullscreen();
     });
 
