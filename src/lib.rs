@@ -40,6 +40,14 @@ pub fn random_sign() -> f64 {
     }
 }
 
+pub fn bytes_from_resource(path: &str) -> Vec<u8> {
+    let bytes = gio::resources_lookup_data(
+        path, 
+        gio::ResourceLookupFlags::NONE
+    ).unwrap();
+    bytes.as_ref().to_owned()
+}
+
 pub fn image_from_resource(path: &str) -> ImageSurface {
     let pb = Pixbuf::from_resource(path).unwrap();
     let pixels = unsafe { pb.get_pixels().to_owned() };
