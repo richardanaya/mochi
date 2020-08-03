@@ -71,6 +71,18 @@ Now your game has everything it needs in it's binary! The images can be acquired
 let img_ball = image_from_resource("/pong/ball.png");
 ```
 
+## Running out of memory while compiling on PinePhone?
+
+You can expand your swap using zram
+
+```
+sudo swapoff /dev/zram0 
+sudo zramctl --reset /dev/zram0 
+sudo zramctl --find --size 2048M
+sudo mkswap /dev/zram0 
+sudo swapon /dev/zram0
+```
+
 ## License
 
 This project is licensed under either of
