@@ -10,6 +10,7 @@ This project is super alpha but *usable*. If you want to join in, feel free to o
 - [x] touch
 - [x] screen rotation
 - [x] atlases
+- [x] play sounds
 - [ ] animated sprites
 
 ## Limitations
