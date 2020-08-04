@@ -2,7 +2,9 @@ use cairo::{Context, Format, ImageSurface, ImageSurfaceData};
 use gdk_pixbuf::*;
 use gtk::prelude::*;
 use rand::Rng;
+use rodio::Source;
 use std::cell::RefCell;
+use std::io::Cursor;
 use std::rc::Rc;
 
 const FPS: u32 = 60;
@@ -41,11 +43,24 @@ pub fn random_sign() -> f64 {
 }
 
 pub fn bytes_from_resource(path: &str) -> Vec<u8> {
-    let bytes = gio::resources_lookup_data(
-        path, 
-        gio::ResourceLookupFlags::NONE
-    ).unwrap();
+    let bytes = gio::resources_lookup_data(path, gio::ResourceLookupFlags::NONE).unwrap();
     bytes.as_ref().to_owned()
+}
+
+pub fn text_from_resource(path: &str) -> String {
+    let b = bytes_from_resource(path);
+    let text = std::str::from_utf8(&b).unwrap();
+    text.to_string()
+}
+
+pub fn sound_from_resource(path: &str) -> Vec<u8> {
+    bytes_from_resource(path)
+}
+
+pub fn play_sound(sound: &Vec<u8>) {
+    let device = rodio::default_output_device().unwrap();
+    let source = rodio::Decoder::new(Cursor::new(sound.clone())).unwrap();
+    rodio::play_raw(&device, source.convert_samples());
 }
 
 pub fn image_from_resource(path: &str) -> ImageSurface {
@@ -87,19 +102,17 @@ pub fn image_from_resource(path: &str) -> ImageSurface {
     img
 }
 
+pub struct Rect {
+    pub x: f64,
+    pub y: f64,
+    pub width: f64,
+    pub height: f64,
+}
+
 pub trait MochiCairoExt {
     fn clear(&self, r: f64, g: f64, b: f64);
     fn draw_image_centered(&self, x: f64, y: f64, img: &ImageSurface);
-    fn draw_subimage_centered(
-        &self,
-        x: f64,
-        y: f64,
-        img: &ImageSurface,
-        sx: f64,
-        sy: f64,
-        sw: f64,
-        sh: f64,
-    );
+    fn draw_subimage_centered(&self, x: f64, y: f64, img: &ImageSurface, source_rect: Rect);
     fn draw_atlas_frame_centered(&self, x: f64, y: f64, img: &Atlas, frame: usize);
 }
 
@@ -120,20 +133,19 @@ impl MochiCairoExt for cairo::Context {
         self.restore();
     }
 
-    fn draw_subimage_centered(
-        &self,
-        x: f64,
-        y: f64,
-        img: &ImageSurface,
-        sx: f64,
-        sy: f64,
-        sw: f64,
-        sh: f64,
-    ) {
+    fn draw_subimage_centered(&self, x: f64, y: f64, img: &ImageSurface, source_rect: Rect) {
         self.save();
-        self.rectangle(x - sw / 2.0, y - sh / 2.0 as f64, sw as f64, sh as f64);
+        self.rectangle(
+            x - source_rect.width / 2.0,
+            y - source_rect.height / 2.0 as f64,
+            source_rect.width as f64,
+            source_rect.height as f64,
+        );
         self.clip();
-        self.translate(x - (sw / 2.0) as f64 - sx, y - (sh / 2.0) as f64 - sy);
+        self.translate(
+            x - (source_rect.width / 2.0) as f64 - source_rect.x,
+            y - (source_rect.height / 2.0) as f64 - source_rect.y,
+        );
         self.set_source_surface(img, 0.0, 0.0);
         self.paint();
         self.restore();
@@ -145,10 +157,12 @@ impl MochiCairoExt for cairo::Context {
             x,
             y,
             &atlas.img.borrow(),
-            frame.x,
-            frame.y,
-            frame.w,
-            frame.h,
+            Rect {
+                x: frame.x,
+                y: frame.y,
+                width: frame.w,
+                height: frame.h,
+            },
         );
     }
 }
@@ -178,11 +192,10 @@ where
         Inhibit(false)
     });
 
-
     let display = gdk::DisplayManager::get().get_default_display().unwrap();
     let mon = display.get_monitor(0).unwrap();
     let win2 = window.clone();
-    mon.connect_property_geometry_notify(move |_|{
+    mon.connect_property_geometry_notify(move |_| {
         win2.borrow().unfullscreen();
         win2.borrow().maximize();
         win2.borrow().fullscreen();

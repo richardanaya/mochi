@@ -71,6 +71,17 @@ Now your game has everything it needs in it's binary! The images can be acquired
 let img_ball = image_from_resource("/pong/ball.png");
 ```
 
+## Dependencies
+for gtk/cairo:
+```
+
+```
+
+for sound:
+```
+sudo dnf install openal-soft-devel libsndfile-devel
+```
+
 ## Running out of memory while compiling on PinePhone?
 
 You can expand your swap using zram
