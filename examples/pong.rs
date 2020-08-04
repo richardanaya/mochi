@@ -15,7 +15,7 @@ struct Game {
 }
 
 fn main() {
-    init(include_bytes!("pong.gresource"));
+    init(include_bytes!("resources/pong.gresource"));
     let game = Rc::new(RefCell::new(Game {
         init: false,
         opponent_paddle_x: 0.0,

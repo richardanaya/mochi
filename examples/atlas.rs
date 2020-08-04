@@ -8,7 +8,7 @@ struct Game {
 }
 
 fn main() {
-    init(include_bytes!("atlas.gresource"));
+    init(include_bytes!("resources/atlas.gresource"));
 
     let img_horse = Rc::new(RefCell::new(image_from_resource("/atlas/horse.png")));
     let atlas_horse = Atlas::new(img_horse, 7, 3, 18);
