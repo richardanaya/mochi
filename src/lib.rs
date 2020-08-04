@@ -57,9 +57,9 @@ pub fn sound_from_resource(path: &str) -> Vec<u8> {
     bytes_from_resource(path)
 }
 
-pub fn play_sound(sound: &Vec<u8>) {
+pub fn play_sound(sound: &'_ [u8]) {
     let device = rodio::default_output_device().unwrap();
-    let source = rodio::Decoder::new(Cursor::new(sound.clone())).unwrap();
+    let source = rodio::Decoder::new(Cursor::new(sound.to_owned())).unwrap();
     rodio::play_raw(&device, source.convert_samples());
 }
 
